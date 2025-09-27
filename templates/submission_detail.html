@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Submission - {{ sub.student_name }}</h2>
+<div class="card">
+  <strong>Exam:</strong> {{ sub.exam.title }}<br/>
+  <strong>Uploaded:</strong> <a href='{{ sub.uploaded_file.url }}' target='_blank'>Download file</a><br/>
+  <strong>OCR text:</strong>
+  <pre style="background:#f6f8fa;padding:10px;border-radius:6px">{{ sub.ocr_text }}</pre>
+  <strong>Marks:</strong> {{ sub.marks_awarded }}<br/>
+  <strong>Feedback:</strong> {{ sub.teacher_feedback }}<br/>
+</div>
+{% endblock %}

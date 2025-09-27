@@ -1,0 +1,108 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<h2
+  style="
+    text-align: center;
+    margin-top: 20px;
+    color: #0366d6;
+    font-size: 24px;
+    font-weight: 600;
+  "
+>
+  Login to Your Account
+</h2>
+
+<form
+  method="post"
+  style="
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  "
+>
+  {% csrf_token %} {% if messages %} {% for message in messages %}
+  <p style="color: red; text-align: center">{{ message }}</p>
+  {% endfor %} {% endif %}
+
+  <p>
+    <label for="username">Username</label>
+    <input
+      type="text"
+      name="username"
+      id="username"
+      placeholder="Enter username"
+      required
+      style="
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      "
+    />
+  </p>
+
+  <p>
+    <label for="password">Password</label>
+    <input
+      type="password"
+      name="password"
+      id="password"
+      placeholder="Enter password"
+      required
+      style="
+        width: 100%;
+        padding: 10px;
+        margin: 8px 0;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      "
+    />
+  </p>
+
+  <button
+    type="submit"
+    style="
+      width: 100%;
+      padding: 12px;
+      background: #28a745;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    "
+  >
+    Login
+  </button>
+
+  <p style="text-align: center; margin-top: 15px; font-size: 14px">
+    Don't have an account?
+    <a href="{% url 'signup' %}" style="color: #0366d6; font-weight: 600"
+      >Sign Up here</a
+    >
+  </p>
+</form>
+
+<style>
+  input:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 6px rgba(40, 167, 69, 0.2);
+    outline: none;
+  }
+  button:hover {
+    background: #218838;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+  label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    display: block;
+    color: #444;
+  }
+</style>
+{% endblock %}

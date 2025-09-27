@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align:center; margin-top:30px; color:#0366d6; font-size:26px;">Upload Study Material</h2>
+
+<div style="max-width:700px; margin:40px auto; padding:30px; background:#fff; border-radius:12px; box-shadow:0 6px 15px rgba(0,0,0,0.1);">
+
+    <!-- Upload Form -->
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div style="margin-bottom:20px;">
+            <label for="{{ form.title.id_for_label }}" style="font-weight:600;">Title</label>
+            {{ form.title }}
+        </div>
+
+        <div style="margin-bottom:20px;">
+            <label for="{{ form.description.id_for_label }}" style="font-weight:600;">Description</label>
+            {{ form.description }}
+        </div>
+
+        <div style="margin-bottom:20px;">
+            <label for="{{ form.file.id_for_label }}" style="font-weight:600;">Select File (PDF / DOC / DOCX)</label>
+            {{ form.file }}
+        </div>
+
+        <button type="submit" style="width:100%; padding:14px; background:#0366d6; color:#fff; font-weight:600; border:none; border-radius:6px; font-size:16px; cursor:pointer;">
+            Upload Material
+        </button>
+    </form>
+
+    <!-- Uploaded Materials List -->
+    <h3 style="margin-top:40px; color:#0366d6;">Uploaded Materials</h3>
+    <ul>
+      {% for material in materials %}
+        <li style="margin-bottom:12px; padding:10px; border:1px solid #ddd; border-radius:6px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+                <strong>{{ material.title }}</strong> — 
+                <a href="{{ material.file.url }}" target="_blank">{{ material.file.name|slice:"10:" }}</a>
+                <br>
+                <small>{{ material.description }}</small>
+            </div>
+            <form method="post" action="{% url 'delete_material' material.id %}">
+                {% csrf_token %}
+                <button type="submit" style="background:#d9534f; color:#fff; border:none; padding:6px 12px; border-radius:4px; cursor:pointer;">Delete</button>
+            </form>
+        </li>
+      {% empty %}
+        <li>No materials uploaded yet.</li>
+      {% endfor %}
+    </ul>
+
+    <p style="text-align:center; margin-top:20px;">
+        <a href="{% url 'teacher_dashboard' %}" style="color:#0366d6; font-weight:600;">Back to Dashboard</a>
+    </p>
+</div>
+
+<style>
+    input, textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+        transition: border 0.3s ease, box-shadow 0.3s ease;
+    }
+    input:focus, textarea:focus {
+        border-color: #0366d6;
+        box-shadow: 0 0 6px rgba(3,102,214,0.2);
+        outline: none;
+    }
+    button:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+</style>
+{% endblock %}

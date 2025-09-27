@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Review: {{ sub.student_name }} — {{ sub.exam.title }}</h2>
+<div class="card">
+  <strong>OCR text:</strong>
+  <pre style="background:#f6f8fa;padding:10px;border-radius:6px">{{ sub.ocr_text }}</pre>
+</div>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Save</button>
+</form>
+{% endblock %}

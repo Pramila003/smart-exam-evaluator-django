@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2 style="text-align:center; margin-top:30px; color:#0366d6; font-size:26px;">📘 Study Materials</h2>
+
+<div style="max-width:900px; margin:40px auto;">
+    {% if materials %}
+        {% for material in materials %}
+            <div style="background:#fff; padding:20px; margin-bottom:20px; border-radius:12px; box-shadow:0 6px 12px rgba(0,0,0,0.08);">
+                <h3 style="margin-top:0;">{{ material.title }}</h3>
+                {% if material.description %}
+                    <p>{{ material.description }}</p>
+                {% endif %}
+                <p>
+                    <a href="{{ material.file.url }}" target="_blank" style="padding:8px 12px; background:#0366d6; color:#fff; border-radius:6px; text-decoration:none; font-weight:600;">Download</a>
+                </p>
+                <small style="color:#555;">Uploaded on {{ material.uploaded_at|date:"M d, Y H:i" }}</small>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p style="text-align:center; font-size:16px; color:#555;">No study materials available yet.</p>
+    {% endif %}
+</div>
+
+<!-- Career Path Section -->
+<div style="max-width:700px; margin:40px auto; padding:20px; background:#f7f7f7; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+    <h2 style="text-align:center; color:#0366d6; cursor:pointer;" onclick="toggleCareerPath()">🎯 Career Path</h2>
+    <div id="career-options" style="display:none; margin-top:20px;">
+        <label style="font-weight:600;">Choose Course:</label>
+        <select id="course-select" style="width:100%; padding:10px; margin-bottom:15px;" onchange="showYearOptions()">
+            <option value="">--Select Course--</option>
+            <option value="engg">Engineering</option>
+            <option value="pharmacy">Pharmacy</option>
+        </select>
+        <div id="year-div" style="display:none;">
+            <label style="font-weight:600;">Select Year:</label>
+            <select id="year-select" style="width:100%; padding:10px; margin-bottom:15px;" onchange="showCareerPath()">
+                <option value="">--Select Year--</option>
+            </select>
+        </div>
+        <div id="career-info" style="background:#fff; padding:15px; border-radius:8px; box-shadow:0 4px 8px rgba(0,0,0,0.05); display:none;"></div>
+    </div>
+</div>
+
+<!-- Certificate Upload Section -->
+<div style="max-width:700px; margin:40px auto; padding:20px; background:#e7f3ff; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.05);">
+    <h2 style="text-align:center; color:#0366d6; cursor:pointer;" onclick="toggleCertificate()">🎓 Upload Certificate</h2>
+    <div id="certificate-upload" style="display:none; margin-top:20px;">
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div style="margin-bottom:20px;">
+                <label for="{{ cert_form.certificate_file.id_for_label }}" style="font-weight:600;">Select Certificate (PDF/JPG/PNG)</label>
+               <input type="file" name="certificate_file" id="id_certificate_file" accept=".pdf,.jpg,.jpeg,.png" required>
+
+            </div>
+            <button type="submit" style="width:100%; padding:14px; background:#0366d6; color:#fff; font-weight:600; border:none; border-radius:6px; font-size:16px;">Upload Certificate</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function toggleCareerPath() {
+    const options = document.getElementById('career-options');
+    options.style.display = options.style.display === 'none' ? 'block' : 'none';
+}
+
+function showYearOptions() {
+    const course = document.getElementById('course-select').value;
+    const yearDiv = document.getElementById('year-div');
+    const yearSelect = document.getElementById('year-select');
+    const careerInfo = document.getElementById('career-info');
+    careerInfo.style.display = 'none';
+    yearSelect.innerHTML = '<option value="">--Select Year--</option>'; 
+    if(course === 'engg' || course === 'pharmacy') {
+        ['1st','2nd','3rd','4th'].forEach(y => {
+            const opt = document.createElement('option');
+            opt.value = y.toLowerCase();
+            opt.text = y + ' Year';
+            yearSelect.appendChild(opt);
+        });
+        yearDiv.style.display = 'block';
+    } else { yearDiv.style.display = 'none'; }
+}
+
+function showCareerPath() {
+    const course = document.getElementById('course-select').value;
+    const year = document.getElementById('year-select').value;
+    const infoDiv = document.getElementById('career-info');
+    if(!course || !year) { infoDiv.style.display='none'; return; }
+
+    const careerPaths = {
+        engg: { '1st':'Focus on basic sciences, mathematics, and engineering fundamentals.',
+                '2nd':'Specialize in core subjects, participate in labs and projects.',
+                '3rd':'Internships, advanced courses, and research opportunities.',
+                '4th':'Final year projects, industry exposure, and job preparation.' },
+        pharmacy: { '1st':'Basic chemistry, biology, and pharmaceutical fundamentals.',
+                    '2nd':'Pharmacology courses, lab work, and practicals.',
+                    '3rd':'Clinical exposure, industrial training, and specialization.',
+                    '4th':'Final year projects, research, and career preparation.' }
+    };
+    infoDiv.innerHTML = careerPaths[course][year];
+    infoDiv.style.display='block';
+}
+
+function toggleCertificate() {
+    const certDiv = document.getElementById('certificate-upload');
+    certDiv.style.display = certDiv.style.display==='none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

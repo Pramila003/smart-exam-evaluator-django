@@ -1,0 +1,10 @@
+{% extends 'base.html' %} {% block content %}
+<h2>Available Exams</h2>
+{% for e in exams %}
+<div class="card">
+  <strong>{{ e.title }}</strong><br />
+  Created: {{ e.created_at }}
+</div>
+{% empty %}
+<p>No exams found. Create one in Django admin.</p>
+{% endfor %} {% endblock %}

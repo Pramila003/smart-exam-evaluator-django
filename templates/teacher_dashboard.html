@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Teacher Dashboard</h2>
+{% for s in subs %}
+  <div class="card">
+    <strong>{{ s.student_name }}</strong> — {{ s.exam.title }} — {{ s.created_at }} <br/>
+    <a href="{% url 'submission_detail' s.id %}">View</a> |
+    <a href="{% url 'review_submission' s.id %}">Review & Grade</a>
+  </div>
+{% empty %}
+  <p>No submissions yet.</p>
+{% endfor %}
+{% endblock %}
