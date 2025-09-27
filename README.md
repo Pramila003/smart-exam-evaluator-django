@@ -13,7 +13,7 @@ Setup (local):
 2. Create virtualenv and install python deps:
    python -m venv venv
    source venv/bin/activate   (or venv\Scripts\activate on Windows)
-   pip install -r requirements.txt
+   pip install -r requirements.txtfjkjdl
 3. Run migrations and start server:
    python manage.py migrate
    python manage.py createsuperuser   # to use admin / teacher account
