@@ -57,38 +57,55 @@ def review_submission(request, submission_id):
 
 # ------------------ New Signup View ------------------
 
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
 from django.shortcuts import render, redirect
+from django.contrib.auth import login
+from .forms import SignUpForm
 
-def signup_view(request):
+def signup(request):
+    app_name = "Smart Exam Evaluator"
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        form = SignUpForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            login(request, user)  # Auto login
-            return redirect('index')  # Redirect to dashboard after signup
+            user = form.save(commit=False)
+            user.set_password(form.cleaned_data['password'])
+            user.save()
+            role = form.cleaned_data['role']
+            login(request, user)
+
+            if role == 'teacher':
+                return redirect('teacher_dashboard')
+            else:
+                return redirect('student_dashboard')
     else:
-        form = UserCreationForm()
-    return render(request, 'signup.html', {'form': form})
+        form = SignUpForm()
+    return render(request, 'signup.html', {'form': form, 'hide_nav': True, 'app_name': app_name})
+
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 def login_view(request):
+    app_name = "Smart Exam Evaluator"
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('index')  # Replace 'home' with the name of your main page
+
+            # Redirect based on role
+            role = getattr(user, 'role', None)  # assuming role is stored on user
+            if role == 'teacher':
+                return redirect('teacher_dashboard')
+            elif role == 'student':
+                return redirect('student_dashboard')
+            else:
+                return redirect('index')  # fallback
         else:
             messages.error(request, "Invalid username or password.")
-    
-    return render(request, 'login.html')
 
+    return render(request, 'login.html', {'hide_nav': True, 'app_name': app_name})
 
 
 

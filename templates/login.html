@@ -1,8 +1,24 @@
-{% extends 'base.html' %} {% load static %} {% block content %}
-<h2
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<!-- App Name Header -->
+<h1
   style="
     text-align: center;
     margin-top: 20px;
+    color: #0366d6;
+    font-size: 32px;
+    font-weight: 700;
+  "
+>
+  Smart Exam Evaluator
+</h1>
+
+<h2
+  style="
+    text-align: center;
+    margin-top: 10px;
     color: #0366d6;
     font-size: 24px;
     font-weight: 600;
@@ -22,9 +38,12 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   "
 >
-  {% csrf_token %} {% if messages %} {% for message in messages %}
-  <p style="color: red; text-align: center">{{ message }}</p>
-  {% endfor %} {% endif %}
+  {% csrf_token %}
+  {% if messages %}
+    {% for message in messages %}
+      <p style="color: red; text-align: center">{{ message }}</p>
+    {% endfor %}
+  {% endif %}
 
   <p>
     <label for="username">Username</label>
@@ -81,9 +100,7 @@
 
   <p style="text-align: center; margin-top: 15px; font-size: 14px">
     Don't have an account?
-    <a href="{% url 'signup' %}" style="color: #0366d6; font-weight: 600"
-      >Sign Up here</a
-    >
+    <a href="{% url 'signup' %}" style="color: #0366d6; font-weight: 600">Sign Up here</a>
   </p>
 </form>
 
@@ -105,4 +122,5 @@
     color: #444;
   }
 </style>
+
 {% endblock %}

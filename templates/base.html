@@ -68,18 +68,20 @@
     </style>
   </head>
   <body>
+    {% if not hide_nav %}
     <div class="header">
       <h1><a href="/">Smart Exam Evaluator</a></h1>
       <div>
         <a href="/upload/">Upload</a> |
         <a href="/teacher/">Teacher Dashboard</a> |
         <a href="/student/dashboard/">Student Dashboard</a> |
-        <a href="/teacher/upload_material/">Upload Material</a>
-
+        <a href="/teacher/upload_material/">Upload Material</a> |
         <a href="/admin/">Admin</a>
       </div>
     </div>
     <hr />
+    {% endif %}
+
     {% block content %}{% endblock %}
   </body>
 </html>

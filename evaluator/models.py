@@ -32,3 +32,39 @@ class Certificate(models.Model):
 
     def __str__(self):
         return f"{self.student.username} Certificate"
+
+from django.contrib.auth.models import User
+from django.db import models
+
+class Profile(models.Model):
+    ROLE_CHOICES = (
+        ('student', 'Student'),
+        ('teacher', 'Teacher'),
+        ('admin', 'Admin'),
+    )
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.role}"
+
+class ExamPaper(models.Model):
+    title = models.CharField(max_length=200)
+    subject = models.CharField(max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    exam_image = models.ImageField(upload_to='exam_papers/', blank=True, null=True)
+
+    def _str_(self):
+        return self.title
+
+from django.utils import timezone
+
+class AnswerKey(models.Model):
+    exam_paper = models.ForeignKey(ExamPaper, on_delete=models.CASCADE, default=1)
+    text_answer = models.TextField(blank=True, null=True)
+    answer_image = models.ImageField(upload_to='answer_keys/', blank=True, null=True)
+    uploaded_at = models.DateTimeField(default=timezone.now) 
+
+    def _str_(self):
+        return f"AnswerKey for {self.exam_paper.title}"
