@@ -18,4 +18,7 @@ urlpatterns = [
     path('teacher/upload_material/', views.upload_material, name='upload_material'),
     path('teacher/delete_material/<int:material_id>/', views.delete_material, name='delete_material'),
     path('student/upload_certificate/', views.upload_certificate, name='upload_certificate'),
+    path('result/<int:submission_id>/', views.evaluate_submission, name='result_view'),
+
+
 ]

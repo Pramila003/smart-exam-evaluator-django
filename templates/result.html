@@ -1,0 +1,72 @@
+{% extends 'base.html' %} {% block content %}
+
+<!-- Page Header -->
+<h1
+  style="
+    text-align: center;
+    margin-top: 20px;
+    color: #0366d6;
+    font-size: 32px;
+    font-weight: 700;
+  "
+>
+  Smart Exam Evaluator
+</h1>
+
+<h2
+  style="
+    text-align: center;
+    margin-top: 10px;
+    color: #0366d6;
+    font-size: 24px;
+    font-weight: 600;
+  "
+>
+  Evaluation Result
+</h2>
+
+<!-- Result Card -->
+<div
+  style="
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 25px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    line-height: 1.6;
+  "
+>
+  <p><b>Student Name:</b> {{ student.student_name }}</p>
+  <p><b>Exam:</b> {{ student.exam.title }}</p>
+  <p><b>Extracted Answer (OCR):</b></p>
+  <pre style="background: #f4f4f4; padding: 10px; border-radius: 5px">
+{{ student.ocr_text }}</pre
+  >
+  <p><b>Similarity Score:</b> {{ student.similarity_score }}%</p>
+  <p><b>Marks Awarded:</b> {{ student.marks_awarded }}</p>
+  <p>
+    <b>Teacher Feedback:</b> {{ student.teacher_feedback|default:"No feedback
+    yet" }}
+  </p>
+  <p><b>Submitted At:</b> {{ student.submitted_at|date:"D, d M Y H:i" }}</p>
+</div>
+
+<!-- Styling -->
+<style>
+  div p {
+    margin: 10px 0;
+    color: #333;
+  }
+  div p b {
+    color: #0366d6;
+  }
+  pre {
+    white-space: pre-wrap; /* wrap long text */
+    word-wrap: break-word;
+    font-family: monospace;
+  }
+</style>
+
+{% endblock %}

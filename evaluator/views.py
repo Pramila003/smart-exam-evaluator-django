@@ -141,6 +141,9 @@ def delete_material(request, material_id):
         material.delete()
     return redirect('upload_material')
 
+from django.shortcuts import render, redirect
+from .forms import CertificateForm
+
 @login_required
 def upload_certificate(request):
     if request.method == 'POST':
@@ -154,3 +157,48 @@ def upload_certificate(request):
         form = CertificateForm()
     
     return render(request, 'upload_certificate.html', {'form': form})
+
+
+# views.py
+from django.shortcuts import render, get_object_or_404
+from PIL import Image
+import pytesseract
+from difflib import SequenceMatcher
+from .models import Submission, AnswerKey, ExamPaper
+
+def evaluate_submission(request, submission_id):
+    submission = get_object_or_404(Submission, id=submission_id)
+
+    # --- Step 1: OCR extract ---
+    if submission.answer_sheet:
+        try:
+            image = Image.open(submission.answer_sheet.path)
+            student_text = pytesseract.image_to_string(image)
+            submission.extracted_text = student_text
+        except Exception as e:
+            submission.extracted_text = f"OCR failed: {e}"
+    else:
+        submission.extracted_text = "No file uploaded."
+
+    # --- Step 2: Fetch AnswerKey ---
+    # Get the exam paper linked to this submission
+    exam_paper = ExamPaper.objects.filter(id=submission.exam.id).first()
+    if exam_paper and exam_paper.answerkey_set.exists():
+        answer_key = exam_paper.answerkey_set.first()
+        correct_answer = answer_key.text_answer or ""
+    else:
+        correct_answer = ""
+
+    # --- Step 3: Compare similarity ---
+    similarity = SequenceMatcher(None, submission.extracted_text, correct_answer).ratio()
+    submission.similarity_score = round(similarity * 100, 2)  # %
+
+    # --- Step 4: Calculate marks ---
+    max_marks = 100  # you can customize per exam
+    submission.marks_awarded = round(max_marks * similarity, 2)
+
+    # --- Step 5: Save submission ---
+    submission.save()
+
+    # --- Step 6: Render result page ---
+    return render(request, "result.html", {"student": submission})
